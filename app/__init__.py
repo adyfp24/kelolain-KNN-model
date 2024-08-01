@@ -2,12 +2,6 @@ from flask import Flask, request, jsonify
 import joblib
 import numpy as np
 import pandas as pd
-from sklearn.preprocessing import StandardScaler, OneHotEncoder
-from sklearn.compose import ColumnTransformer
-from sklearn.pipeline import Pipeline
-from sklearn.neighbors import KNeighborsClassifier
-from imblearn.over_sampling import SMOTE
-from imblearn.pipeline import Pipeline as ImbPipeline
 
 def create_app():
     app = Flask(__name__)
