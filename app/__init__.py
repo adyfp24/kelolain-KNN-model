@@ -39,7 +39,10 @@ def create_app():
         
         return result
 
-
+    @app.route('/', methods=['GET'])
+    def hello_wolrd():
+        return jsonify({'message': 'hello world'})
+    
     @app.route('/predict', methods=['POST'])
     def predict_endpoint():
         data = request.get_json()
