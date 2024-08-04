@@ -1,24 +1,20 @@
 from flask import Flask, request, jsonify
 import joblib
 import pandas as pd
-import numpy as np
 
 def create_app():
     app = Flask(__name__)
 
     def load_model():
-        preprocessor = joblib.load('model/preprocessor.pkl')
-        knn_model = joblib.load('model/knn_model.pkl')
-        return preprocessor, knn_model
+        return joblib.load('model/kelolain-model.pkl')
 
-    preprocessor, model = load_model()
+    model = load_model()
 
-    def predict(preprocessor, model, data):
+    def predict(model, data):
         df = pd.DataFrame(data)
-        df_preprocessed = preprocessor.transform(df)
-        
-        prediction = model.predict(df_preprocessed)
-        probabilities = model.predict_proba(df_preprocessed)
+
+        prediction = model.predict(df)
+        probabilities = model.predict_proba(df)
 
         analyses = {
             'baik': "Keuangan Anda dalam kondisi baik. Pengeluaran Anda terkendali dan tabungan cukup.",
@@ -40,7 +36,6 @@ def create_app():
         }
         
         return result
-
     @app.route('/', methods=['GET'])
     def hello_world():
         return jsonify({'message': 'hello world'})
@@ -48,20 +43,17 @@ def create_app():
     @app.route('/predict', methods=['POST'])
     def predict_endpoint():
         data = request.get_json()
-
         if isinstance(data, dict):
             data = [data]  
 
         try:
-            result = predict(preprocessor, model, data)
+            result = predict(model, data)
             return jsonify(result)
         except Exception as e:
             return jsonify({
                 'error': str(e)
             }), 400
-
     return app
-
 app = create_app()
 
 if __name__ == '__main__':
